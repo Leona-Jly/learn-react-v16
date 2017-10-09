@@ -1,3 +1,12 @@
+.wrap{
+  padding: 1rem;
+}
+.active{
+  background-color: lightgreen;
+}
+.not-active{
+  background-color: lightgrey;
+}
 .App {
   text-align: center;
 }
@@ -8,14 +17,8 @@
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
+  height: 40px;
   padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
 }
 
 .App-intro {
