@@ -90,7 +90,7 @@ class App extends Component {
             <strong>exact strict</strong><Route exact strict path="/testRoute/" component={ComponentForRouteTest} /><br/> */}
 
           {/* API - Router */}
-            {/* Router是最常见的低级路由器，props的history可以传入自定义history，子级可以传入一个单一element；一般apps都会用高级路由器：BrowserRouter、HashRouter、MemoryRouter、NativeRouter、StaticRouter */}
+            {/* Router是公共底层接口，props的history可以传入自定义history，子级可以传入一个单一element；一般apps都会用高级路由器：BrowserRouter、HashRouter、MemoryRouter、NativeRouter、StaticRouter */}
 
           {/* API - StaticRouter */}
             {/* 指的是不会改变location的Router，在服务器端比较有用；props有basename、location、context、children；basename为string，作为所有location的前缀URL，标准写法为开头有斜杠，结尾无斜杠；location可以是url字符串，也可以是location对象，格式为{pathname, search, hash, state}；context为js对象，在render渲染时，组件能够向对象中添加属性来存储关于渲染的信息；children为node节点； */}
