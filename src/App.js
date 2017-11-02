@@ -184,11 +184,21 @@ class App extends Component {
           {/* API - withRouter */}
             {/* 使用withRouter可以获取到match、history和location；每次路由改变时，withRouter会重新渲染它的组件； */}
             {/* 若想要用withRouter阻止被shouldComponentUpdate阻塞的更新，一定要把执行shouldComponentUpdate那部分的组件也包裹进去，正确写法`withRouter(connect(...)(MyComponent))`，错误写法`connect(...)(withRouter(MyComponent))` */}
-            <ShowTheLocationWithRouter />
+            {/* <ShowTheLocationWithRouter /> */}
+
+          {/* DOM API - Route */}
+            <TestRouteRender path="/testRouteRender" component={TestRouteRenderComp}/>
         </div>
         {/* react-router非官网dom示例 */}
         <div className="react-router-not-official-examples">
-          <PrimaryLayout />
+          {/* <PrimaryLayout /> */}
+        </div>
+        {/* react官网教程 */}
+        <div className="react-official-tutorial-tic-tac-toe">
+          <p>mine: </p>
+          <TicTacToeMine /><hr/>
+          <p>official: </p>
+          <TicTacToe />
         </div>
       </div>
     );
@@ -1016,17 +1026,36 @@ class App extends Component {
   }
   const ShowTheLocationWithRouter = withRouter(ShowTheLocation); // 使用withRouter才能获取到location等
 
+  /* DOM API - Route */
+  const TestRouteRenderComp = ({history, location, match}) => (
+    <div style={{padding: '2rem 0'}}>
+      I'm TestRouteRenderComp. Which path do I match: {match.path}
+    </div>
+  )
+  const TestRouteRender = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={props => (
+      <Component {...props}/>
+    )}/>
+  )
+
 /* react-router非官方dom示例 */
   // [译] 关于 React Router 4 的一切 (https://juejin.im/post/5995a2506fb9a0249975a1a4?utm_source=tuicool&utm_medium=referral)
     const HomePage = props => <div>HomePage</div>
+    const oddEvent = (match, location) => {
+      if (!match) {
+        return false
+      }
+      const eventID = parseInt(match.params.eventID)
+      return !isNaN(eventID) && eventID % 2 === 1
+    }
     const PrimaryHeader = () => (
       <header className="primary-header">
         <h4>Welcome to our app!</h4>
         <nav>
-          {/* <NavLink> 与 <Link> 一样，但如果 <NavLink> 匹配浏览器的 URL，那么它可以提供一些额外的样式能力。 */}
-          <NavLink to="/" exact activeClassName="active">Home | </NavLink>
-          <NavLink to="/users" activeClassName="active">Users  | </NavLink>
-          <NavLink to="/products" activeClassName="active">Products</NavLink>
+          {/* <NavLink> 与 <Link> 一样，但如果 <NavLink> 匹配浏览器的 URL，会给渲染出的元素增加样式属性。 */}
+          <NavLink to="/" exact>Home | </NavLink>
+          <NavLink to="/users" activeStyle={{fontWeight: 'bold'}}>Users  | </NavLink>
+          <NavLink to="/products">Products | </NavLink>
         </nav>
       </header>
     )
@@ -1078,7 +1107,7 @@ class App extends Component {
               <Route path="/" exact component={HomePage} />
               <Route path="/users" component={UserSubLayout} />
               <Route path="/products" component={ProductSubLayout} />
-              <Redirect to="/" />
+              {/* <Redirect to="/" /> */}
             </Switch>
           </main>
         </div>
@@ -1133,7 +1162,240 @@ class App extends Component {
       </div>
     )
 
+/* react官网教程 tic-tac-toe */
+  // class Square extends React.Component {
+  //   render() {
+  //     return (
+  //       <button onClick={() => this.props.click()} className="square">
+  //         {this.props.value}
+  //       </button>
+  //     );
+  //   }
+  // }
 
+  // mine
+  function SquareMine(props){
+    return (
+      <button onClick={props.click} className="square">
+        {props.value}
+      </button>
+    )
+  }
 
+  class BoardMine extends React.Component {
+    constructor(props){
+      super(props)
+      this.state = {
+        squares: Array(9).fill(null), // 初始化一个包含9个空值的数组作为状态数据
+        currPlayer: 'X',
+        status: 'Next player: X',
+        gameOver: false,
+      }
+    }
+
+    handleClick = (i) => {
+      if(this.state.squares[i] || this.state.squares.indexOf(null) == -1 || this.state.gameOver){
+        return;
+      }
+      this.setState((prevState) => {
+        // let newSquares = prevState.squares.slice();
+        let newSquares = [...prevState.squares];
+        newSquares[i] = prevState.currPlayer;
+        let newState = {};
+        newState.currPlayer = prevState.currPlayer == 'X'? 'O' : 'X';
+        newState.squares = newSquares;
+        if(this.ifGameOver(newSquares)){
+          newState.status = `The winner is ${prevState.currPlayer}`;
+          newState.gameOver = true;
+        }else{
+          newState.status = `Next player: ${newState.currPlayer}`;
+        }
+        return newState;
+      });
+    }
+
+    ifGameOver(squares){
+      let arr = squares;
+      let horizontalKind = [0, 3, 6];
+      let verticalKind = [0, 1, 2];
+      for(let i = 0; i < horizontalKind.length; i++){
+        if(arr[horizontalKind[i]] && arr[horizontalKind[i]] == arr[horizontalKind[i]+1] && arr[horizontalKind[i]] == arr[horizontalKind[i]+2]){
+          return true;
+        }
+      }
+      for(let j = 0; j < verticalKind.length; j++){
+        if(arr[verticalKind[j]] && arr[verticalKind[j]] == arr[verticalKind[j]+3] && arr[verticalKind[j]] == arr[verticalKind[j]+6]){
+          return true;
+        }
+      }
+      if(arr[4] && ((arr[4] == arr[0] && arr[4] == arr[8]) || (arr[4] == arr[2] && arr[4] == arr[6]))){
+        return true;
+      }
+      return false;
+    }
+
+    reset = () => {
+      this.setState({
+        squares: Array(9).fill(null), // 初始化一个包含9个空值的数组作为状态数据
+        currPlayer: 'X',
+        status: 'Next player: X',
+        gameOver: false,
+      });
+    }
+
+    renderSquare(i) {
+      return (
+        <SquareMine 
+          value={this.state.squares[i]}
+          click={() => this.handleClick(i)} />
+      );
+    }
+
+    render() {
+      const status = this.state.status;
+
+      return (
+        <div>
+          <div className="status">{status}</div>
+          <button onClick={this.reset}>reset</button>
+          <div className="board-row">
+            {this.renderSquare(0)}
+            {this.renderSquare(1)}
+            {this.renderSquare(2)}
+          </div>
+          <div className="board-row">
+            {this.renderSquare(3)}
+            {this.renderSquare(4)}
+            {this.renderSquare(5)}
+          </div>
+          <div className="board-row">
+            {this.renderSquare(6)}
+            {this.renderSquare(7)}
+            {this.renderSquare(8)}
+          </div>
+        </div>
+      );
+    }
+  }
+
+  class TicTacToeMine extends React.Component {
+    render() {
+      return (
+        <div className="game">
+          <div className="game-board">
+            <BoardMine />
+          </div>
+          <div className="game-info">
+            <div>{/* status */}</div>
+            <ol>{/* TODO */}</ol>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  // 官方
+  function Square(props){
+    return (
+      <button onClick={props.click} className="square">
+        {props.value}
+      </button>
+    )
+  }
+
+  function calculateWinner(squares){
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for(let i = 0; i < lines.length; i++){
+      const [a, b, c] = lines[i];
+      if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
+        return squares[a];
+      }
+    }
+    return null;
+  }
+
+  class Board extends React.Component {
+    constructor(props){
+      super(props)
+      this.state = {
+        squares: Array(9).fill(null), // 初始化一个包含9个空值的数组作为状态数据
+        xIsNext: true, // 下个落子方
+      }
+    }
+
+    handleClick(i){
+      const squares = this.state.squares.slice();
+      if(calculateWinner(squares) || squares[i]) return;
+      squares[i] = this.state.xIsNext? 'X' : 'O';
+      this.setState({
+        squares,
+        xIsNext: !this.state.xIsNext,
+      })
+    }
+
+    renderSquare(i) {
+      return (
+        <Square 
+          value={this.state.squares[i]}
+          click={() => this.handleClick(i)} />
+      );
+    }
+
+    render() {
+      const winner = calculateWinner(this.state.squares);
+      let status;
+      if(winner){
+        status = 'Winner: ' + winner;
+      }else{
+        status = 'Next player: ' + (this.state.xIsNext? 'X' : 'O');
+      }
+
+      return (
+        <div>
+          <div className="status">{status}</div>
+          <div className="board-row">
+            {this.renderSquare(0)}
+            {this.renderSquare(1)}
+            {this.renderSquare(2)}
+          </div>
+          <div className="board-row">
+            {this.renderSquare(3)}
+            {this.renderSquare(4)}
+            {this.renderSquare(5)}
+          </div>
+          <div className="board-row">
+            {this.renderSquare(6)}
+            {this.renderSquare(7)}
+            {this.renderSquare(8)}
+          </div>
+        </div>
+      );
+    }
+  }
+
+  class TicTacToe extends React.Component {
+    render() {
+      return (
+        <div className="game">
+          <div className="game-board">
+            <Board />
+          </div>
+          <div className="game-info">
+            <div>{/* status */}</div>
+            <ol>{/* TODO */}</ol>
+          </div>
+        </div>
+      );
+    }
+  }
 
 export default App;
