@@ -3,8 +3,11 @@ import React, { Component } from 'react'
 class Comment extends Component{
   render(){
     return (
-      <div>
-        Comment
+      <div className='comment'>
+        <div className='comment-user'>
+          <span>{this.props.username} </span>：
+        </div>
+        <p>{this.props.content}</p>
       </div>
     )
   }

@@ -16,15 +16,15 @@ class App extends Component {
     return (
       <div className="wrap">
         {/* react官网示例 */}
-        <ReactOfficialExamples />
+        {/*<ReactOfficialExamples /><hr/>*/}
         {/* 非react官网示例 */}
-        <ReactNotOfficialExamples />
+        {/*<ReactNotOfficialExamples /><hr/>*/}
         {/* react-router官网core示例 */}
-        <ReactRouterOfficialExamples />
+        {/*<ReactRouterOfficialExamples /><hr/>*/}
         {/* react-router非官网dom示例 */}
-        <ReactRouterNotOfficialExamples />
+        {/*<ReactRouterNotOfficialExamples /><hr/>*/}
         {/* react官网教程 */}
-        <ReactOfficialTutorialTicTacToe />
+        {/* <ReactOfficialTutorialTicTacToe /><hr/> */}
         {/* react小书 - 胡子大哈 */}
         <ReactHandbookHuZiDaHa />
       </div>
