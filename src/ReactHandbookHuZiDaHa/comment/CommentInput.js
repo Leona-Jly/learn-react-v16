@@ -16,7 +16,7 @@ class CommentInput extends Component{
   componentWillMount(){
     let storageUsername = window.localStorage.getItem('username');
     if(storageUsername){
-      this.setState({username: JSON.parse(storageUsername)});
+      this.setState({username: storageUsername});
     }
   }
   componentDidMount(){
@@ -31,7 +31,7 @@ class CommentInput extends Component{
     window.localStorage.setItem(key, value);
   }
   handleUsernameBlur = (e) => {
-    this._saveUsername('username', JSON.stringify(e.target.value));
+    this._saveUsername('username', e.target.value);
   }
   handleContentChange = (e) => {
     // 类似 Markdown 的行内代码块显示功能，用户输入的用 `` 包含起来的内容都会被处理成用 <code> 元素包含。例如输入 `console.log` 就会处理成 <code>console.log</code> 再显示到页面上。
@@ -46,14 +46,6 @@ class CommentInput extends Component{
   handleSubmit= () => {
     if(typeof this.props.onSubmit === 'function'){
       let {username, content} = this.state;
-      if(!username){
-        alert('请输入用户名');
-        return;
-      }
-      if(!content){
-        alert('请输入评论内容');
-        return;
-      }
       let id = parseInt(Math.random()*999999);
       let createdTime = +new Date();
       this.props.onSubmit({username, content, id, createdTime});
@@ -70,7 +62,8 @@ class CommentInput extends Component{
               value={this.state.username}
               onChange={this.handleUsernameChange}
               onBlur={this.handleUsernameBlur}
-              type="text" />
+              type="text"
+            />
           </div>
         </div>
         <div className="comment-field">
@@ -79,12 +72,13 @@ class CommentInput extends Component{
             <textarea
               ref={(area) => this.textareaInput = area}
               value={this.state.content}
-              onChange={this.handleContentChange} />
+              onChange={this.handleContentChange}
+            />
           </div>
         </div>
         <div className="comment-field-button">
           {/*<button onClick={() => this.props.onSubmit(this.state)}>发布</button>*/}
-          <button onClick={this.handleSubmit}>按钮</button>
+          <button onClick={this.handleSubmit}>提交</button>
         </div>
         <div dangerouslySetInnerHTML={{__html: this.state.dangerousHTML}}></div>
       </div>

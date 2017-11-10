@@ -63,7 +63,8 @@ class Comment extends Component{
         </span>
         <span 
           className='comment-delete'
-          onClick={() => this.handleDelete(comment.id)}>删除</span>
+          onClick={() => this.handleDelete(comment.id)}
+        >删除</span>
       </div>
     )
   }

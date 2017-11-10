@@ -6,7 +6,7 @@ import 'core-js/es6/map'; // core-js提供es6的Map和Set的polyfill
 import 'core-js/es6/set';
 import './index.css';
 import './tic-tac-toe.css';
-import './ReactHandbookHuZiDaHa/comment-practice.css';
+import './ReactHandbookHuZiDaHa/comment/comment-practice.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
