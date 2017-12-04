@@ -41,7 +41,7 @@ class Comment extends Component{
             .replace(/'/g, '&#039;')
             .replace(/`([\S\s]+?)`/g, '<code>$1</code>'); // 将``转为<code></code>
   }
-
+  
   handleDelete = (id) => {
     if(this.props.onDeleteComment){
       this.props.onDeleteComment(id);
